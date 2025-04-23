@@ -2,7 +2,6 @@ import { requireAuth } from "@ultickets/common";
 import { Request, Response, Router } from "express";
 import { body } from "express-validator";
 import { User } from "../model/user";
-import { Group } from "../model/group";
 
 const router = Router();
 
@@ -25,7 +24,6 @@ router.post(
       firstName,
       lastName,
       age,
-      group: (await Group.build({ name: "First group" }).save()).id,
       role,
       phone,
       avatarUrl,

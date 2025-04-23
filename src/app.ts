@@ -3,6 +3,7 @@ import express, { json } from "express";
 import { createRouter } from "./routes/create";
 import { currentUser, errorHandler } from "@ultickets/common";
 import { usersRouter } from "./routes/users";
+import { groupRouter } from "./routes/group";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(currentUser);
 
 app.use(createRouter);
 app.use(usersRouter);
+app.use(groupRouter);
 app.use(errorHandler);
 
 export default app;

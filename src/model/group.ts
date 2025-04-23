@@ -6,6 +6,7 @@ interface GroupAttrs {
 
 type GroupDoc = {
   name: string;
+  members: mongoose.Schema.Types.ObjectId[];
 } & mongoose.Document;
 
 type GroupModel = {
@@ -18,6 +19,13 @@ const groupSchema = new mongoose.Schema<GroupDoc>(
       type: String,
       required: true,
     },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
+      },
+    ],
   },
   {
     toJSON: {
