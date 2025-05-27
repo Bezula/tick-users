@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+import { Role } from "./role";
 
 type UserAttrs = {
   email: string;
   firstName: string;
   lastName: string;
   age: number;
-  role: "administrator" | "family-member";
+  role: Role;
   group?: mongoose.Schema.Types.ObjectId;
   phone?: string;
   avatarUrl?: string;
@@ -16,7 +17,7 @@ type UserDoc = {
   firstName: string;
   lastName: string;
   age: number;
-  role: "administrator" | "family-member";
+  role: Role;
   group?: mongoose.Schema.Types.ObjectId;
   phone?: string;
   avatarUrl?: string;

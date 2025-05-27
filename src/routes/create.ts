@@ -16,7 +16,6 @@ router.post(
     body("phone").optional().isString(),
     body("avatarUrl").optional().isString(),
   ],
-
   requireAuth,
   async (req: Request, res: Response) => {
     const { firstName, lastName, age, role, phone, avatarUrl } = req.body;

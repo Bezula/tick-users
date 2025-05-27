@@ -3,6 +3,7 @@ import { body, param } from "express-validator";
 import { Group } from "../model/group";
 import { User } from "../model/user";
 import { BadRequestError, requireAuth } from "@ultickets/common";
+import { hasRole } from "../middlewares/has-role";
 
 const router = Router();
 
@@ -31,6 +32,7 @@ router.put(
   "/api/users/group/:groupId/member/:memberId/add",
   [param("groupId").notEmpty(), param("memberId").notEmpty()],
   requireAuth,
+  hasRole("administrator"),
   async (req: Request, res: Response) => {
     const { groupId, memberId } = req.params;
     const user = await User.findById(memberId);
@@ -58,14 +60,38 @@ router.put(
   }
 );
 
-router.get(
-  "/api/users/group",
+router.delete(
+  "/api/users/group/:groupId/member/:memberId/remove",
+  [param("groupId").notEmpty(), param("memberId").notEmpty()],
   requireAuth,
+  hasRole("administrator"),
   async (req: Request, res: Response) => {
-    const groups = await Group.find({}).populate("members");
+    const { groupId, memberId } = req.params;
+    const user = await User.findById(memberId);
+    const group = await Group.findById(groupId);
 
-    res.send({ groups });
+    if (!user) {
+      throw new BadRequestError("User not found");
+    }
+
+    if (!group) {
+      throw new BadRequestError("Group not found");
+    }
+
+    group.members.splice(group.members.indexOf(user.id), 1);
+    user.group = undefined;
+
+    await group.save();
+    await user.save();
+
+    res.send({ group });
   }
 );
+
+router.get("/api/users/group", async (req: Request, res: Response) => {
+  const groups = await Group.find({}).populate("members");
+
+  res.send({ groups });
+});
 
 export { router as groupRouter };
